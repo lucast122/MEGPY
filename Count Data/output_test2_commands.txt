@@ -1,0 +1,7 @@
+open viewer=Taxonomy;
+open file='/Users/Timo/Desktop/Mappings/Mappings/output_test2.daa';
+uncollapse nodes = all;
+select rank=Order;
+select nodes=subtree;
+export what=CSV format=taxonName_to_percent separator=tab counts=assigned file='/Users/Timo/Dropbox/Thesis/MwMaP/Count Data/output_test2_taxon_to_percent.txt';
+quit;
