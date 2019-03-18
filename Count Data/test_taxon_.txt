@@ -1,0 +1,356 @@
+"Bacteroidaceae"	0.578390
+"Bacteroides"	3.543877
+"Bacteroides reticulotermitis"	32.019468
+"Bacteroides reticulotermitis JCM 10512"	0.008797
+"Dysgonamonadaceae"	0.014679
+"Dysgonomonas"	0.014679
+"Porphyromonadaceae"	0.019907
+"Prevotellaceae"	0.590516
+"Prevotella"	0.574065
+"Prevotella oryzae"	0.006893
+"Prevotella paludivivens"	0.333391
+"Flavobacteriales"	0.009319
+"Flavobacteriaceae"	0.008919
+"Fusobacteriales"	0.015553
+"Fusobacteriaceae"	2.013673
+"Fusobacterium"	0.012756
+"Rhizobiales"	0.018599
+"Rhodobacterales"	0.007362
+"Rhodospirillales"	1.686018
+"Acetobacteraceae"	1.619384
+"Acetobacter"	0.527719
+"Acetobacter nitrogenifigens"	0.016241
+"Acetobacter papayae"	0.013791
+"Acetobacter pasteurianus"	0.008348
+"Acetobacter persici"	0.008743
+"Acetobacter subgen. Acetobacter"	0.056227
+"Acetobacter aceti"	0.056227
+"Acetobacter aceti NBRC 14818"	0.010164
+"Acetobacter tropicalis"	0.011267
+"Gluconacetobacter"	0.017457
+"Gluconacetobacter liquefaciens"	0.007991
+"Gluconobacter"	0.086327
+"Komagataeibacter"	0.033693
+"Komagataeibacter hansenii"	0.011213
+"Neoasaia"	0.007879
+"Neoasaia chiangmaiensis"	0.007879
+"Sphingomonadales"	0.009749
+"Sphingomonadaceae"	0.007342
+"Burkholderiales"	0.020078
+"Burkholderiaceae"	0.009016
+"Rhodocyclales"	0.029207
+"Rhodocyclaceae"	0.027308
+"Azospira"	0.012805
+"Desulfovibrionales"	0.175358
+"Desulfovibrionaceae"	0.170755
+"Desulfovibrio"	0.164150
+"Desulfovibrio legallii"	0.043969
+"environmental samples <Desulfovibrio>"	0.006976
+"uncultured Desulfovibrio sp."	0.006976
+"Aeromonadales"	0.010232
+"Succinivibrionaceae"	0.009646
+"Succinatimonas"	0.009451
+"Succinatimonas hippei"	0.009436
+"Enterobacterales"	0.010803
+"Enterobacteriaceae"	0.007000
+"Pseudomonadales"	0.009207
+"Pseudomonadaceae"	0.007552
+"Pseudomonas"	0.007215
+"Xanthomonadales"	0.023691
+"Xanthomonadaceae"	0.018540
+"Spirochaetales"	0.028479
+"Spirochaetaceae"	0.028470
+"Treponema"	0.018936
+"Treponema bryantii"	0.014830
+"Synergistales"	0.031740
+"Synergistaceae"	0.031574
+"Fretibacterium"	0.013097
+"Fretibacterium fastidiosum"	0.013097
+"Pyramidobacter"	0.006966
+"Actinomycetales"	0.027977
+"Actinomycetaceae"	0.027650
+"Actinomyces"	0.020605
+"Bifidobacteriales"	0.037525
+"Bifidobacteriaceae"	0.036471
+"Bifidobacterium"	0.028030
+"Corynebacteriales"	0.052512
+"Corynebacteriaceae"	0.022309
+"Corynebacterium"	0.021870
+"Mycobacteriaceae"	0.009627
+"Mycobacterium"	0.009583
+"Micrococcales"	1.432886
+"Cellulomonadaceae"	0.008152
+"Cellulomonas"	0.006937
+"Microbacteriaceae"	1.112109
+"Microbacterium"	0.040991
+"Pseudoclavibacter"	0.703902
+"Pseudoclavibacter soli"	0.695540
+"Micrococcaceae"	0.022563
+"Arthrobacter"	0.008089
+"Propionibacteriales"	0.048514
+"Nocardioidaceae"	0.007523
+"Propionibacteriaceae"	0.040156
+"Acidipropionibacterium"	0.020371
+"Acidipropionibacterium jensenii"	0.010642
+"Propionibacterium"	0.006937
+"Streptomycetales"	0.017667
+"Streptomycetaceae"	0.017667
+"Streptomyces"	0.016280
+"Coriobacteriales"	0.021660
+"Atopobiaceae"	0.008538
+"Eggerthellales"	0.009475
+"Eggerthellaceae"	0.009475
+"Bacillales"	0.163676
+"Bacillaceae"	0.040581
+"Bacillus"	0.022285
+"Paenibacillaceae"	0.061289
+"Brevibacillus"	0.013356
+"Brevibacillus laterosporus"	0.011335
+"Paenibacillus"	0.039302
+"Staphylococcaceae"	0.009724
+"Staphylococcus"	0.008514
+"Lactobacillales"	0.719841
+"Enterococcaceae"	0.011203
+"Enterococcus"	0.009719
+"Lactobacillaceae"	0.588271
+"Lactobacillus"	0.565459
+"Lactobacillus brevis"	0.020508
+"Lactobacillus casei group"	0.069734
+"Lactobacillus paracasei"	0.022807
+"Lactobacillus paracasei subsp. paracasei"	0.007874
+"Lactobacillus fuchuensis"	0.126410
+"Lactobacillus fuchuensis DSM 14340 = JCM 11249"	0.028240
+"Lactobacillus sakei"	0.076617
+"Lactobacillus sakei subsp. sakei"	0.010906
+"Leuconostocaceae"	0.033112
+"Leuconostoc"	0.030115
+"Leuconostoc gelidum"	0.017432
+"Streptococcaceae"	0.016798
+"Streptococcus"	0.011330
+"Clostridiales"	31.018276
+"Clostridiaceae"	3.249356
+"Butyricicoccus"	0.039571
+"Butyricicoccus pullicaecorum"	0.020356
+"Butyricicoccus pullicaecorum 1.2"	0.013210
+"Caloramator"	0.013869
+"Caloramator quimbayensis"	0.007269
+"Clostridium"	2.610682
+"Clostridium acetireducens"	0.008865
+"Clostridium amylolyticum"	0.013420
+"Clostridium beijerinckii"	0.009090
+"Clostridium botulinum"	0.014001
+"Clostridium carboxidivorans"	0.009065
+"Clostridium chromiireducens"	0.018824
+"Clostridium estertheticum"	0.007279
+"Clostridium jeddahense"	0.008186
+"Clostridium kluyveri"	0.546440
+"Clostridium kluyveri DSM 555"	0.016812
+"Clostridium kluyveri NBRC 12016"	0.121133
+"Clostridium liquoris"	0.008509
+"Clostridium ljungdahlii"	0.008089
+"Clostridium lundense"	0.017100
+"Clostridium luticellarii"	0.009265
+"Clostridium magnum"	0.015411
+"Clostridium merdae"	0.015480
+"Clostridium oryzae"	0.008440
+"Clostridium pasteurianum"	0.012365
+"Clostridium phoceensis"	0.019112
+"Clostridium sp. DMHC 10"	0.010715
+"Clostridium sp. PI-S10-A1B"	0.030520
+"Clostridium sp. SN20"	0.009509
+"Clostridium sp. W14A"	0.426894
+"Clostridium tyrobutyricum"	0.009773
+"environmental samples <Clostridium>"	0.062255
+"uncultured Clostridium sp."	0.020024
+"Desnuesiella"	0.008021
+"Desnuesiella massiliensis"	0.008021
+"Hungatella"	0.011335
+"Hungatella hathewayi"	0.009382
+"Inediibacterium"	0.011457
+"Inediibacterium massiliense"	0.011457
+"Oxobacter"	0.012770
+"Oxobacter pfennigii"	0.012770
+"unclassified Clostridiaceae"	0.006166
+"Youngiibacter"	0.008592
+"Youngiibacter fragilis"	0.008592
+"Clostridiales incertae sedis"	0.032844
+"Clostridiales Family XII. Incertae Sedis"	0.014879
+"Acidaminobacter"	0.007733
+"Acidaminobacter hydrogenoformans"	0.007733
+"Fusibacter"	0.007147
+"Fusibacter sp. 3D3"	0.007147
+"Clostridiales Family XIII. Incertae Sedis"	0.016939
+"Anaerovorax"	0.013844
+"Anaerovorax odorimutans"	0.013844
+"environmental samples <Clostridiales>"	0.085228
+"uncultured Clostridiales bacterium"	0.085228
+"Eubacteriaceae"	0.080469
+"Acetobacterium woodii"	0.008948
+"Eubacterium"	0.051208
+"environmental samples <Eubacterium>"	0.015890
+"Hungateiclostridiaceae"	0.070769
+"Anaerobacterium"	0.017032
+"Anaerobacterium chartisolvens"	0.017032
+"Hungateiclostridium"	0.012438
+"Hungateiclostridium cellulolyticum"	0.012438
+"Ruminiclostridium"	0.041299
+"Ruminiclostridium sufflavum"	0.012951
+"Lachnospiraceae"	0.772362
+"Anaerocolumna"	0.032580
+"Anaerocolumna aminovalerica"	0.013566
+"Anaerocolumna jejuensis"	0.009714
+"Anaerocolumna xylanovorans"	0.007552
+"Anaerotignum"	0.038462
+"Anaerotignum neopropionicum"	0.009558
+"Anaerotignum propionicum"	0.028904
+"Blautia"	0.061709
+"Blautia obeum"	0.031179
+"Blautia obeum A2-162"	0.009007
+"environmental samples <Blautia>"	0.007547
+"uncultured Blautia sp."	0.007127
+"Butyrivibrio"	0.020151
+"Coprococcus"	0.007279
+"Dorea"	0.007088
+"Faecalicatena"	0.186483
+"Faecalicatena fissicatena"	0.186483
+"Hespellia"	0.056534
+"Hespellia stercorisuis"	0.056534
+"Lachnoclostridium"	0.152971
+"[Clostridium] aminophilum"	0.013293
+"[Clostridium] bolteae"	0.010496
+"[Clostridium] fimetarium"	0.007415
+"[Clostridium] symbiosum"	0.024852
+"Lachnoclostridium phytofermentans"	0.017823
+"Lachnotalea"	0.008260
+"Lachnotalea glycerini"	0.008260
+"Roseburia"	0.012009
+"Tyzzerella"	0.011960
+"unclassified Lachnospiraceae"	0.036861
+"Oscillospiraceae"	12.092443
+"Oscillibacter"	11.667145
+"environmental samples <Oscillibacter>"	0.290730
+"Oscillibacter sp. CAG:155"	0.175075
+"uncultured Oscillibacter sp."	0.086097
+"Oscillibacter sp. 1-3"	0.100610
+"Oscillibacter sp. 57_20"	0.040518
+"Oscillibacter sp. PC13"	0.275275
+"Oscillibacter valericigenes"	3.087027
+"Oscillibacter valericigenes Sjm18-20"	0.497087
+"Peptococcaceae"	0.317106
+"Dehalobacter"	0.014264
+"Desulfitobacterium"	0.187103
+"Desulfitobacterium hafniense"	0.166171
+"Desulfosporosinus"	0.036646
+"Desulfotomaculum"	0.020889
+"unclassified Peptococcaceae"	0.008738
+"Peptostreptococcaceae"	0.031867
+"Clostridioides"	0.010193
+"Clostridioides difficile"	0.009690
+"Ruminococcaceae"	1.709469
+"Acetanaerobacterium"	0.009382
+"Acetanaerobacterium elongatum"	0.009382
+"Acetivibrio"	0.000674
+"Anaeromassilibacillus"	0.009885
+"Anaerotruncus"	0.092204
+"Anaerotruncus colihominis"	0.015021
+"Anaerotruncus rubiinfantis"	0.050266
+"Anaerotruncus sp. AT3"	0.010066
+"Ethanoligenens"	0.051540
+"Ethanoligenens harbinense"	0.051526
+"Ethanoligenens harbinense YUAN-3"	0.008899
+"Faecalibacterium"	0.062187
+"Faecalibacterium prausnitzii"	0.032912
+"Faecalibacterium prausnitzii M21/2"	0.007772
+"Flavonifractor"	0.113332
+"environmental samples <Flavonifractor>"	0.063466
+"uncultured Flavonifractor sp."	0.063466
+"Flavonifractor plautii"	0.016793
+"Hydrogenoanaerobacterium"	0.015978
+"Hydrogenoanaerobacterium saccharovorans"	0.015978
+"Marasmitruncus"	0.145546
+"Marasmitruncus massiliensis"	0.145546
+"Papillibacter"	0.119693
+"Papillibacter cinnamivorans"	0.119693
+"Papillibacter cinnamivorans DSM 12816"	0.026117
+"Pseudoflavonifractor"	0.297208
+"Pseudoflavonifractor capillosus"	0.075172
+"Pseudoflavonifractor capillosus ATCC 29799"	0.070803
+"Pseudoflavonifractor sp. Marseille-P3106"	0.219293
+"Pygmaiobacter"	0.106918
+"Pygmaiobacter massiliensis"	0.106918
+"Ruminococcus"	0.057833
+"environmental samples <Ruminococcus>"	0.019644
+"uncultured Ruminococcus sp."	0.013317
+"Ruminococcus flavefaciens"	0.007039
+"Sporobacter"	0.064398
+"Sporobacter termitidis"	0.064398
+"Sporobacter termitidis DSM 10068"	0.008626
+"Subdoligranulum"	0.026663
+"Subdoligranulum variabile"	0.017569
+"unclassified Ruminococcaceae"	0.156993
+"[Clostridium] sporosphaeroides"	0.010691
+"[Clostridium] viride"	0.046122
+"unclassified Ruminococcaceae (miscellaneous)"	0.083476
+"Ruminococcaceae bacterium"	0.012648
+"Ruminococcaceae bacterium CPB6"	0.017423
+"Ruminococcaceae bacterium cv2"	0.019019
+"Ruminococcaceae bacterium D16"	0.010666
+"Ruminococcaceae bacterium D5"	0.023720
+"Syntrophomonadaceae"	0.008279
+"Syntrophomonas"	0.007215
+"unclassified Clostridiales"	1.677998
+"Intestinimonas"	0.068938
+"Intestinimonas butyriciproducens"	0.064335
+"unclassified Clostridiales (miscellaneous)"	1.435224
+"Clostridiales bacterium"	1.207179
+"Clostridiales bacterium 42_27"	0.027611
+"Clostridiales bacterium 59_14"	0.017603
+"Clostridiales bacterium NK3B98"	0.043417
+"Clostridiales bacterium oral taxon 876"	0.019038
+"Clostridiales bacterium oral taxon 876 str. F0540"	0.007054
+"Clostridiales bacterium VE202-15"	0.012131
+"Thermoanaerobacterales"	0.073107
+"Thermoanaerobacteraceae"	0.056271
+"Tepidanaerobacter"	0.043290
+"Tepidanaerobacter syntrophicus"	0.041865
+"Thermoanaerobacterales Family III. Incertae Sedis"	0.008836
+"Erysipelotrichales"	0.061157
+"Erysipelotrichaceae"	0.061157
+"Turicibacter"	0.020918
+"Turicibacter sp. HGF1"	0.020386
+"unclassified Erysipelotrichaceae"	0.010808
+"unclassified Erysipelotrichaceae (miscellaneous)"	0.010652
+"Erysipelotrichaceae bacterium NK3D112"	0.007093
+"Acidaminococcaceae"	0.039414
+"Acidaminococcus"	0.012878
+"Phascolarctobacterium"	0.012692
+"Selenomonadales"	0.025467
+"Selenomonadaceae"	0.011037
+"Sporomusaceae"	0.013815
+"Veillonellales"	0.058008
+"Veillonellaceae"	0.058008
+"Dialister"	0.032702
+"environmental samples <Dialister>"	0.026668
+"Dialister sp. CAG:357"	0.024765
+"Megasphaera"	0.016461
+"Tissierellales"	0.044755
+"Sporanaerobacter"	0.035665
+"Sporanaerobacter sp. PP17-6a"	0.034005
+"Acholeplasmatales"	0.017852
+"Acholeplasmataceae"	0.017852
+"Acholeplasma"	0.017828
+"environmental samples <Acholeplasma>"	0.017720
+"Acholeplasma sp. CAG:878"	0.017715
+"Methanobacteriales"	0.702008
+"Methanobacteriaceae"	0.676316
+"Methanobacterium"	0.355075
+"Methanobacterium congolense"	0.021582
+"Methanobacterium paludis"	0.102656
+"Methanobrevibacter"	0.105414
+"Methanosarcinales"	0.010042
+"Methanosarcinaceae"	0.009749
+"Methanosarcina"	0.009451
+"Methanosarcina barkeri"	0.007435
+"Trichinellida"	0.012722
+"Trichuridae"	0.012722
+"Trichuris"	0.012722
