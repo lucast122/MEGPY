@@ -1,5 +1,5 @@
-# MwMaP
-Collection of scripts for metagenomic downstream analysis of bioreactor data using MEGAN and Python.
+# METAMAP - METAgenome analysis with Megan and Python
+Collection of scripts for metagenomic downstream analysis of bioreactor data using the tool MEGAN and the programming language Python.
 
 # Taxonomic anaylsis
 
