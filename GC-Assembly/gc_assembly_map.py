@@ -23,7 +23,8 @@ import argparse
 import os
 from Bio import SeqIO
 from Bio.Blast.Applications import NcbiblastnCommandline
-
+from Bio.Blast import NCBIXML
+import Bio.Blast.NCBIWWW
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -54,19 +55,40 @@ def gc_assembly(input_file: str, output_file: str, seed_id: str) -> object:
 """
 Runs NCBI BLAST for the output of gc-assembly vs NR database
 """
-def online_blast(input):
-    result_handles = []
-    for record in SeqIO.parse(input, "fasta"):
-        print(record.seq)
-        blastn_cline = NcbiblastnCommandline(query=input, db="nr", evalue=0.001, outfmt=5, out="opuntia.xml")
-        os.system(str(blastn_cline))
-
-    return result_handles
+def blast(input):
+    print("INPUT: " + str(input))
+    blastn_cline = NcbiblastnCommandline(query=input, db="/Users/Timo/Dropbox/Thesis/METAMAP/GC-Assembly/random_seqs.fasta", outfmt=5, out="opuntia.xml")
+    stdout, stderr = blastn_cline()
+    return stdout, stderr
 
 
 # Run the gene centric assembly using the command line parameters
 #gc_output = gc_assembly(args.input, args.input[:-5] + "_gc_assembly.txt", args.id)
-results = online_blast("/Users/Timo/Desktop/Mappings/Mappings/output_test_gc_assembly.txt")
-#print(results)
+#res = blast("/Users/Timo/Desktop/Mappings/Mappings/output_test_gc_assembly.txt")
+#print(res)
 
-#handle = Bio.Blast.NCBIWWW.qblast("blastn", "nr", "ATGGATTTTCATCTGACAAATGAGCATCTGATGCTCCGCAAGATGTACCGCGAATTCGCCGAGACCGAAGTGAAGCCAATCGCCACTGAGATCGACGAAGAAGAGCGCTTCCCCATGGAGACCGTGGAGAAGATGGCCAAGCTGGGCATGATGGGCATTTACTTCCCNAAGGAGTATGGCGGCGCCGGCGGCGACGTCCTCTCNTATGCAATGTGCGTGGAGGAGCTGGCGAAGGTNTGCGGTACTACTGCCGTNGTCGTTTCCGCTCATACCTCCCTGTGCTGCGCTCCNATCTTTGAACATGGTACCGAGGAGCAGAAGAAAAAGTATCTGCCTGACCTGCTTTCCGGCAAGAAGATTGGCGCGTTCGGTCTGACCGAACCCGGNGCCGGAACGGATGCCTCNGGTCAGCAGACCATTGCCGTTCTGGAAGGTGACCATTACATCCTCAACGGTTCCAAGTGCTTCATTACCAACGGCAACGTGGCCGATACCTTCGTGGTATTCGCCATGACCGATAAGAAGCTGGGCAACCACGGCATTTCCGCTTTCATTGTTGAAAGGGATTTCCCCGGNTTCTCTCAGGGCAAGCATGAGCTGAAGATGGGCATCCGCGGCAGCTCTACCTGCGACCTGATTTTCGAGGACTGCATTGTACCGAAAGAGAACCTGCTGGGNAAAGAGGGCAAGGGCTTTAAGGTTGCCATGCAGACCCTGGACGGCGGNCGCATCGGCATTGCCTCCCAGGCNCTGGGNCTGGCCGAGGGTGCCATCGATGAAGCTGTCAAGTATGTCAAGGAGCGCGTNCAGTTCGGCCGCCCCCTGTCCAAGTTCCAGAACACTCAGTTCCAGCTGGCCGACATGCACTGCCGCACCCAGGCTGCGCAGTATCTGGTGTACGCCGCCGCCTGCAAGAAGCAGCTCCATGAGGATTACTCAATGGATGCGGCCATGGCCAAGCTGTTTGCCGCCGAGACTGCTTCTGATGTGACCCGCCGTGCCGTACAGCTGTTTGGCGGNTACGGTTACACCCGTGAGTATCCCGTGGAGCGCATGATGCGCGACGCNAAGATCACCGAGATCTACGAGGGTACTTCCGAAGTCCAGCGGATGGTTATCGCCAGCCACTTGGGN")
+
+#Read in the fasta created by cg-assembler
+for record in SeqIO.parse("/Users/Timo/Desktop/Mappings/Mappings/output_test_gc_assembly.txt", "fasta"):
+    result_handle = Bio.Blast.NCBIWWW.qblast("blastn", "nr" ,record.seq)
+    break
+
+
+
+blast_record = NCBIXML.read(result_handle)
+
+
+E_VALUE_THRESH = 0.04
+
+for alignment in blast_record.alignments:
+    for hsp in alignment.hsps:
+        if hsp.expect < E_VALUE_THRESH:
+            print("****Alignment****")
+            print("sequence:", alignment.title)
+            print("length:", alignment.length)
+            print("e value:", hsp.expect)
+            print(hsp.query[0:75] + "...")
+            print(hsp.match[0:75] + "...")
+            print(hsp.sbjct[0:75] + "...")
+
+
