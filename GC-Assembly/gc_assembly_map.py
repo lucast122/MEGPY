@@ -29,13 +29,15 @@ import Bio.Blast.NCBIWWW
 import matplotlib.pyplot as plt
 import numpy as np
 
+E_VALUE_THRESH = 0.04
+GC_OUTPUT = "gc_output_temp"
+
 parser = argparse.ArgumentParser(description='Parse command line arguments.')
 parser.add_argument('input', type=str,
                     help='Input file for the gene centric assembly (.daa file)')
 parser.add_argument('id', type=str,
                     help='EC accession number of the desired SEED attribute for which the gc-assembly should be created')
 args = parser.parse_args()
-
 
 """
 Performs Gene Centric assembly for a specific SEED ID on a given .daa file
@@ -50,45 +52,38 @@ def gc_assembly(input_file: str, output_file: str, seed_id: str) -> object:
               " -fun SEED -id " + seed_id
     os.system(command)
     print(command)
-    return output_file
+
 
 """
 Runs NCBI BLAST for the output of gc-assembly vs NR database
 """
+
+
 def blast(input):
     print("INPUT: " + str(input))
-    blastn_cline = NcbiblastnCommandline(query=input, db="/Users/Timo/Dropbox/Thesis/METAMAP/GC-Assembly/random_seqs.fasta", outfmt=5, out="opuntia.xml")
-    stdout, stderr = blastn_cline()
-    return stdout, stderr
+    for record in SeqIO.parse(input, "fasta"):
+        result_handle = Bio.Blast.NCBIWWW.qblast("blastn", "nr", record.seq)
+        blast_record = NCBIXML.read(result_handle)
+        with open(input[:-6] + "_blast_results", "w") as writer:
+            for alignment in blast_record.alignments:
+                for hsp in alignment.hsps:
+                    if hsp.expect < E_VALUE_THRESH:
+                        writer.writelines("****Alignment****")
+                        writer.writelines("sequence:" + str(alignment.title))
+                        writer.writelines("length:" + str(alignment.length))
+                        writer.writelines("e value:" + str(hsp.expect))
+                        writer.writelines(hsp.query[0:75] + "...")
+                        writer.writelines(hsp.match[0:75] + "...")
+                        writer.writelines(hsp.sbjct[0:75] + "...")
+                        writer.write("\n")
+                        writer.write("\n")
+        break
 
 
 # Run the gene centric assembly using the command line parameters
-#gc_output = gc_assembly(args.input, args.input[:-5] + "_gc_assembly.txt", args.id)
-#res = blast("/Users/Timo/Desktop/Mappings/Mappings/output_test_gc_assembly.txt")
-#print(res)
+gc_assembly_file_name = GC_OUTPUT + "_ID_" + args.id + ".fasta"
+gc_assembly(args.input, gc_assembly_file_name, args.id)
 
-
-#Read in the fasta created by cg-assembler
-for record in SeqIO.parse("/Users/Timo/Desktop/Mappings/Mappings/output_test_gc_assembly.txt", "fasta"):
-    result_handle = Bio.Blast.NCBIWWW.qblast("blastn", "nr" ,record.seq)
-    break
-
-
-
-blast_record = NCBIXML.read(result_handle)
-
-
-E_VALUE_THRESH = 0.04
-
-for alignment in blast_record.alignments:
-    for hsp in alignment.hsps:
-        if hsp.expect < E_VALUE_THRESH:
-            print("****Alignment****")
-            print("sequence:", alignment.title)
-            print("length:", alignment.length)
-            print("e value:", hsp.expect)
-            print(hsp.query[0:75] + "...")
-            print(hsp.match[0:75] + "...")
-            print(hsp.sbjct[0:75] + "...")
-
-
+# Run blast with the gc assembly output vs nr
+#blast(gc_assembly_file_name)
+blast("reads-Acyl-CoA_dehydrogenase__short-chain_specific__EC_1.3.99.2.fasta")
