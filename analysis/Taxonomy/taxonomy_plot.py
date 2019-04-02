@@ -33,8 +33,8 @@ args = parser.parse_args()
 # Threshold in percent for plotting. Every taxonomic class with a percentage higher than this is used for the plot
 threshold = args.threshold
 mapping_file = ""
-mapping_file_path = "/Users/Timo/Desktop/Mappings/Mappings/"
-count_folder_path = "/Users/Timo/Dropbox/Thesis/MwMaP/Count Data/"
+mapping_file_path = "/Volumes/Elements/Uni/Data Master Thesis/ready/"
+count_folder_path = "/Users/Timo/Dropbox/Thesis/METAMAP/analysis/Count Data/"
 count_file_name = ""
 
 phyla = []
