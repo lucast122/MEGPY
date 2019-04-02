@@ -20,17 +20,25 @@ the SEED attribute. The output is a list of organisms with the desired SEED attr
 """
 
 import argparse
+import ntpath
 import os
-from Bio import SeqIO
-from Bio.Blast.Applications import NcbiblastnCommandline
-from Bio.Blast import NCBIXML
-import Bio.Blast.NCBIWWW
+import signal
 
-import matplotlib.pyplot as plt
-import numpy as np
+import Bio.Blast.NCBIWWW
+from Bio import SeqIO
+from Bio.Blast import NCBIXML
+
+
+class TimeoutException(Exception):  # Custom exception class
+    pass
+
+
+def timeout_handler(signum, frame):  # Custom signal handler
+    raise TimeoutException
 
 E_VALUE_THRESH = 0.04
-GC_OUTPUT = "gc_output_temp"
+
+GC_OUTPUT = "gc_temp"
 
 parser = argparse.ArgumentParser(description='Parse command line arguments.')
 parser.add_argument('input', type=str,
@@ -38,6 +46,10 @@ parser.add_argument('input', type=str,
 parser.add_argument('id', type=str,
                     help='EC accession number of the desired SEED attribute for which the gc-assembly should be created')
 args = parser.parse_args()
+
+MAPPING_FILE_PATH = args.input
+MAPPING_FILE_NAME = ntpath.basename(MAPPING_FILE_PATH)[:-5]
+
 
 """
 Performs Gene Centric assembly for a specific SEED ID on a given .daa file
@@ -59,13 +71,45 @@ Runs NCBI BLAST for the output of gc-assembly vs NR database
 """
 
 
-def blast(input):
-    print("INPUT: " + str(input))
+def blast(input, max_time):
+    strains = []
+    BLAST_OUTPUT_NAME = input[:-6] + MAPPING_FILE_NAME + "_blast_results"
+    count = 0
+    print("RUNNING BLAST WITH INPUT: " + str(input))
+    try:
+        os.remove(BLAST_OUTPUT_NAME)
+        print("Blast results already exist for file " + input + " deleting results before computing new.")
+    except FileNotFoundError:
+        print("No previous results found")
+
     for record in SeqIO.parse(input, "fasta"):
-        result_handle = Bio.Blast.NCBIWWW.qblast("blastn", "nr", record.seq)
+        # Only BLAST contigs that came from more than 20 reads and have more than 50bp
+        if len(record.seq) < 50 or int(record.description.split(" ")[2].split("=")[1]) < 20:
+            continue
+
+        print("Running BLAST for record ", record.id, record.seq)
+        # Change the behavior of SIGALRM
+        signal.signal(signal.SIGALRM, timeout_handler)
+        signal.alarm(max_time)
+        # This try/except loop ensures that
+        #   you'll catch TimeoutException when it's sent.
+        try:
+            result_handle = Bio.Blast.NCBIWWW.qblast("blastn", "nr", record.seq, megablast=True)
+        except TimeoutException:
+            print("BLAST run aborted, because it took longer than " + str(max_time) + " seconds.")
+            with open(BLAST_OUTPUT_NAME, "a") as writer:
+                writer.writelines("BLAST failed. Runtime exceeded maximum time")
+
+            continue  # continue the for loop if function A takes more than defined number of seconds
+        else:
+            # Reset the alarm
+            signal.alarm(0)
+
+        # Now write the BLAST output to a file and create another file with a list of strains
         blast_record = NCBIXML.read(result_handle)
-        with open(input[:-6] + "_blast_results", "w") as writer:
+        with open(BLAST_OUTPUT_NAME, "a") as writer:
             for alignment in blast_record.alignments:
+                strains.append(alignment.title)
                 for hsp in alignment.hsps:
                     if hsp.expect < E_VALUE_THRESH:
                         writer.writelines("****Alignment****")
@@ -77,7 +121,8 @@ def blast(input):
                         writer.writelines(hsp.sbjct[0:75] + "...")
                         writer.write("\n")
                         writer.write("\n")
-        break
+    return strains
+
 
 
 # Run the gene centric assembly using the command line parameters
@@ -85,5 +130,8 @@ gc_assembly_file_name = GC_OUTPUT + "_ID_" + args.id + ".fasta"
 gc_assembly(args.input, gc_assembly_file_name, args.id)
 
 # Run blast with the gc assembly output vs nr
-#blast(gc_assembly_file_name)
-blast("reads-Acyl-CoA_dehydrogenase__short-chain_specific__EC_1.3.99.2.fasta")
+strains = blast(gc_assembly_file_name, 220)
+print(strains)
+
+# blast("reads-Acyl-CoA_dehydrogenase__short-chain_specific__EC_1.3.99.2.fasta")
+# blast("reads-Butyryl-CoA_dehydrogenase__EC_1.3.99.2.fasta")
