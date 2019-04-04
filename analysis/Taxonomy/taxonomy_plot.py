@@ -17,24 +17,30 @@
 
 import argparse
 import glob
+import ntpath
 import os
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 parser = argparse.ArgumentParser(description='Parse command line arguments.')
-parser.add_argument('threshold', type=float,
-                    help='Float vlue for plotting cutoff. Only classes with higher percentage than this value are shown')
+parser.add_argument('-t', '--threshold', type=float,
+                    help='Float value for plotting cutoff. Only classes with higher '
+                         'percentage than this value are shown')
 
 parser.add_argument('-p', '--plot', action='store_true',
                     help='If set MEGAN is not run and just the plot is created')
+parser.add_argument('-d', '--daa', type=str,
+                    help='Path to the folder containing the .daa files of interest')
+
+
 args = parser.parse_args()
 
 # Threshold in percent for plotting. Every taxonomic class with a percentage higher than this is used for the plot
 threshold = args.threshold
 mapping_file = ""
-mapping_file_path = "/Volumes/Elements/Uni/Data Master Thesis/ready/"
-count_folder_path = "/Users/Timo/Dropbox/Thesis/METAMAP/analysis/Count Data/"
+mapping_file_path = args.daa
+count_folder_path = "Output/"
 count_file_name = ""
 
 phyla = []
@@ -46,19 +52,19 @@ data_bars = []
 
 # Create commands.txt with the proper commands for the right file
 
-os.chdir(mapping_file_path)
 # For loop over all .daa files in folder specified by mapping_file_path
 # Creates a specific command.txt for each .daa file present
-for file in glob.glob("*.daa"):
-    mapping_file = file[:-4]
-    print("Current mapping file: " + str(mapping_file) + ".daa")
-    os.chdir(count_folder_path)
-    with open(str(mapping_file) + '_commands.txt', 'w') as the_file:
-        count_file_name = str(mapping_file) + "_taxon_to_percent.txt"
+for file in glob.glob(mapping_file_path + "*.daa"):
+    mapping_file_name = ntpath.basename(file)
+    print("Current mapping file: " + mapping_file_name)
+
+    with open("Output/" + mapping_file_name + '_commands.txt', 'w') as the_file:
+        print(the_file)
+        count_file_name = str(mapping_file_name) + "_taxon_to_percent.txt"
         count_file_absolute_path = count_folder_path + count_file_name
         the_file.write("open viewer=Taxonomy;\n")
         the_file.write("open file='" +
-                       str(mapping_file_path) + str(mapping_file) + ".daa';\n")
+                       str(file) + ";\n")
 
         the_file.write("uncollapse nodes = all;\n")
 
@@ -67,18 +73,21 @@ for file in glob.glob("*.daa"):
         the_file.write("export what=CSV format=taxonName_to_percent separator=tab counts=assigned file='" +
                        str(count_file_absolute_path) + "';\n")
         the_file.write("quit;")
+        the_file.close()
 
-command = "/Applications/MEGAN_/MEGAN.app/Contents/MacOS/JavaApplicationStub -g -E < " + \
-          str(mapping_file) + "_commands.txt"
-if (not args.plot):
-    os.system(command)
-
+        command = "/Applications/MEGAN_/MEGAN.app/Contents/MacOS/JavaApplicationStub -g -E < " + \
+                  "Output/" + str(mapping_file_name) + "_commands.txt"
+    if not args.plot:
+        try:
+            os.system(command)
+        except OSError:
+            print("Failed to start MEGAN. Please configure the correct path")
+    break
 # find all taxon_to_percent  .txt
 # files in the taxon_to_percent folder
 # and use data for plotting. For loop to iterate over all files
-os.chdir(count_folder_path)
 
-for file in glob.glob("*taxon_*.txt"):
+for file in glob.glob(count_folder_path + "*taxon_*.txt"):
     phyla = []
     values = []
     phyla_with_percentage = []
