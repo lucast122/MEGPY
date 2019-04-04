@@ -24,6 +24,7 @@ import ntpath
 import os
 import signal
 
+import Bio
 import Bio.Blast.NCBIWWW
 from Bio import SeqIO
 from Bio.Blast import NCBIXML
@@ -58,7 +59,7 @@ Returns name of the output file
 """
 
 
-def gc_assembly(input_file: str, output_file: str, seed_id: str) -> object:
+def gc_assembly(input_file: str, output_file: str, seed_id: str):
     command = "/Applications/MEGAN_/tools/gc-assembler --input " + input_file + \
               " -o " + output_file + \
               " -fun SEED -id " + seed_id
@@ -73,7 +74,7 @@ Runs NCBI BLAST for the output of gc-assembly vs NR database
 
 def blast(input, max_time):
     strains = []
-    BLAST_OUTPUT_NAME = input[:-6] + MAPPING_FILE_NAME + "_blast_results"
+    BLAST_OUTPUT_NAME = input[:-6] + str(MAPPING_FILE_NAME) + "_blast_results"
     count = 0
     print("RUNNING BLAST WITH INPUT: " + str(input))
     try:
@@ -95,6 +96,10 @@ def blast(input, max_time):
         #   you'll catch TimeoutException when it's sent.
         try:
             result_handle = Bio.Blast.NCBIWWW.qblast("blastn", "nr", record.seq, megablast=True)
+            with open("blast_output_" + MAPPING_FILE_NAME + args.id + ".xml", "w") as out_handle:
+                out_handle.write(result_handle.read())
+
+            result_handle.close()
         except TimeoutException:
             print("BLAST run aborted, because it took longer than " + str(max_time) + " seconds.")
             with open(BLAST_OUTPUT_NAME, "a") as writer:
@@ -127,11 +132,23 @@ def blast(input, max_time):
 
 # Run the gene centric assembly using the command line parameters
 gc_assembly_file_name = GC_OUTPUT + "_ID_" + args.id + ".fasta"
-gc_assembly(args.input, gc_assembly_file_name, args.id)
+# gc_assembly(args.input, gc_assembly_file_name, args.id)
 
 # Run blast with the gc assembly output vs nr
-strains = blast(gc_assembly_file_name, 220)
-print(strains)
+strains = blast(gc_assembly_file_name, 60)
+strains = list(dict.fromkeys(strains))
+
+# Now write all unique strains associated with wanted MEGAN ID to a file
+STRAINS_FILE_NAME = "strains_" + str(MAPPING_FILE_NAME) + args.id
+with open(STRAINS_FILE_NAME, "w") as f:
+    for strain in strains:
+        f.writelines(strain)
+
+# create summary file to informs about present strains as well as strains associated with reverse-beta-oxidation
+
+
+
+
 
 # blast("reads-Acyl-CoA_dehydrogenase__short-chain_specific__EC_1.3.99.2.fasta")
 # blast("reads-Butyryl-CoA_dehydrogenase__EC_1.3.99.2.fasta")
