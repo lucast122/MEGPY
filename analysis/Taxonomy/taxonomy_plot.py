@@ -14,14 +14,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-
 import argparse
 import glob
 import ntpath
 import os
+from collections import OrderedDict
 
 import matplotlib.pyplot as plt
-import numpy as np
 
 parser = argparse.ArgumentParser(description='Parse command line arguments.')
 parser.add_argument('-t', '--threshold', type=float,
@@ -39,7 +38,6 @@ parser.add_argument('-d', '--daa', type=str,
 parser.add_argument('-o', '--output', type=str,
                     help='Path to output folder')
 
-
 args = parser.parse_args()
 
 # Threshold in percent for plotting. Every taxonomic class with a percentage higher than this is used for the plot
@@ -51,11 +49,9 @@ count_file_name = ""
 
 out_path = args.output
 
-
 phyla = []
 phyla_combined = []
 values = []
-pos_count = 0
 pos = []
 data_bars = []
 phyla_pairwise = []
@@ -152,112 +148,138 @@ for file in glob.glob("Output/" + "*taxon_*.txt"):
     recipe = phyla_with_percentage
     fig, ax = plt.subplots(figsize=(16, 10), subplot_kw=dict(aspect="equal"))
 
-    wedges, texts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40)
-
+    # wedges, texts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40)
+    #
     bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
-
+    #
     kw = dict(xycoords='data', textcoords='data', arrowprops=dict(arrowstyle="-"),
               bbox=bbox_props, zorder=0, va="center")
-
-    for i, p in enumerate(wedges):
-        ang = (p.theta2 - p.theta1) / 2. + p.theta1
-        y = np.sin(np.deg2rad(ang))
-        x = np.cos(np.deg2rad(ang))
-        horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
-        connectionstyle = "angle,angleA=0,angleB={}".format(ang)
-        kw["arrowprops"].update({"connectionstyle": connectionstyle})
-        ax.annotate(recipe[i], xy=(x, y), xytext=(1.35 * np.sign(x), 1.4 * y),
-                    horizontalalignment=horizontalalignment, **kw)
-
-    # Title messses picture up. Use latex fig title instead
-    # ax.set_title("Distribution of taxa on phylum level")
-    try:
-        fig.savefig(count_folder_path + file_ID + ".pdf", bbox_inches='tight')
-        print("Plot successfully created for " + str(file_ID))
-        plt.close()
-        pass
-    except Exception as e:
-        print("Could not create plot successfully.")
-        plt.close()
-    else:
-        pass
-    finally:
-        pass
-
-    phyla_pairwise.append(phyla)
-    data_pairwise.append(values)
-
-for phylum_list in phyla_pairwise:
-    for phylum_list2 in phyla_pairwise:
-        # print(phylum_list)
-        # print(phylum_list2)
-        temp = []
-        if phylum_list == phylum_list2:
-            continue
-
-        temp.append(phylum_list)
-        temp.append(phylum_list2)
-        temp2.append(temp)
-
-print(temp2)
-phyla_pairwise = temp2
-
-temp2 = []
-for dat in data_pairwise:
-    for dat2 in data_pairwise:
-        temp = []
-        if dat == dat2:
-            continue
-        temp.append(dat)
-        temp.append(dat2)
-        temp2.append(temp)
-
-data_pairwise = temp2
+    #
+    # for i, p in enumerate(wedges):
+    #     ang = (p.theta2 - p.theta1) / 2. + p.theta1
+    #     y = np.sin(np.deg2rad(ang))
+    #     x = np.cos(np.deg2rad(ang))
+    #     horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
+    #     connectionstyle = "angle,angleA=0,angleB={}".format(ang)
+    #     kw["arrowprops"].update({"connectionstyle": connectionstyle})
+    #     ax.annotate(recipe[i], xy=(x, y), xytext=(1.35 * np.sign(x), 1.4 * y),
+    #                 horizontalalignment=horizontalalignment, **kw)
+    #
+    # # Title messses picture up. Use latex fig title instead
+    # # ax.set_title("Distribution of taxa on phylum level")
+    # try:
+    #     fig.savefig(count_folder_path + file_ID + ".pdf", bbox_inches='tight')
+    #     print("Plot successfully created for " + str(file_ID))
+    #     plt.close()
+    #     pass
+    # except Exception as e:
+    #     print("Could not create plot successfully.")
+    #     plt.close()
+    # else:
+    #     pass
+    # finally:
+    #     pass
 
 
+#     phyla_pairwise.append(phyla)
+#     data_pairwise.append(values)
+#
+# for phylum_list in phyla_pairwise:
+#     for phylum_list2 in phyla_pairwise:
+#         # print(phylum_list)
+#         # print(phylum_list2)
+#         temp = []
+#         if phylum_list == phylum_list2:
+#             continue
+#
+#         temp.append(phylum_list)
+#         temp.append(phylum_list2)
+#         temp2.append(temp)
+#
+# print(temp2)
+# phyla_pairwise = temp2
+#
+# temp2 = []
+# for dat in data_pairwise:
+#     for dat2 in data_pairwise:
+#         temp = []
+#         if dat == dat2:
+#             continue
+#         temp.append(dat)
+#         temp.append(dat2)
+#         temp2.append(temp)
+#
+# data_pairwise = temp2
 
 
 # start 2nd plot
 
-if not args.donut:
+
+def grouped_barplot():
+    pos_count = 0
     print("Creating grouped bar chart ...")
-    bar_width = 0.005
+    bar_width = 1
     # plt.bar(pos, data, bar_width, color='blue', edgecolor='black')
     for dat in data_bars:
         pos.append(pos_count)
-        pos_count += 0.0055
+        pos_count += 1.1
     data_int = [round(int(float(i))) for i in data_bars]
 
-    count = 0
+    keys = range(len(data_int))
+    phyla_dict = OrderedDict(zip(keys, phyla_combined))
+    phyla_non_redundant = list(dict.fromkeys(phyla_combined))
+    # create dictionary mapping names to colors
+    my_colors = [(x / 200,
+                  (x / len(phyla_non_redundant)), 0.5) for x in range(len(phyla_non_redundant))]
+    color_dict = OrderedDict(zip(phyla_non_redundant, my_colors))
+    print(color_dict)
+    # prop_cycle = plt.rcParams['axes.prop_cycle']
+    # colors = prop_cycle.by_key()['color']
+    print(len(data_bars))
 
-    prop_cycle = plt.rcParams['axes.prop_cycle']
-    colors = prop_cycle.by_key()['color']
+    barlist = []
+    # for counter, _ in enumerate(data_bars):
+    # print("Plotting bar " + str(counter) + " / " + str(len(data_int)))
+    # plt.cla()
+    # lab = phyla_dict[counter]
+    # col = color_dict[lab]
+    bar_container = plt.bar(pos, height=data_int, width=bar_width)
 
-    for dat in data_bars:
-        bar = plt.bar(pos, height=data_int, width=bar_width, label=phyla_combined[count], color=colors)
-        count += 1
+    for counter, b in enumerate(bar_container):
+        lab = phyla_dict[counter]
+        b.set_label(lab)
+        col = color_dict[lab]
+        b.set_color(col)
+
+        # print(lab)
+        # print(bar.get_children())
+        # for rect in bar.get_children():
+        #     col = color_dict[lab]
+        #     rect.set_color(col)
+
+    # for bar in barlist:
+    #     for l in bar.get_children():
+    #         l.set_color(color_dict[bar.get_label()])
+    #         print(color_dict[bar.get_label()])
+    # handles, labels = plt.gca().get_legend_handles_labels()
+    # by_label = OrderedDict(zip(labels, handles))
+    # plt.legend(phyla_non_redundant)
+    plt.legend(phyla_non_redundant, bbox_to_anchor=(1.04, 1), loc="upper left")
 
     plt.xticks()
-    plt.legend(bbox_to_anchor=(1.04, 1), loc="upper left")
     plt.margins(x=0.03)
     plt.xlim(0)
     plt.xlabel('Taxonomic Class', fontsize=12)
     plt.ylabel('Relative abundance in percent', fontsize=12)
     plt.title('Taxonomic analysis of the dataset ' + str(mapping_file), fontsize=12)
 
-    plot_name = str(mapping_file) + "_grouped_barchart.pdf"
+    plot_name = "grouped_barchart.pdf"
+    # plt.show()
+    print("Saving plot ...")
+    plt.savefig(plot_name, bbox_inches="tight")
+    print("Saved plot as " + plot_name)
+    plt.close()
 
-    try:
-        plt.savefig(plot_name, bbox_inches="tight")
-        print("Saved plot as " + plot_name)
-        plt.close()
-        pass
-    except Exception as e:
-        print("Could not create plot successfully.")
-        plt.close()
-    else:
-        pass
-    finally:
-        pass
 
-    plt.show()
+if not args.donut:
+    grouped_barplot()
