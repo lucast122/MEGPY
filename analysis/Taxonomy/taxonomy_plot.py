@@ -30,8 +30,14 @@ parser.add_argument('-t', '--threshold', type=float,
 
 parser.add_argument('-p', '--plot', action='store_true',
                     help='If set MEGAN is not run and just the plot is created')
+parser.add_argument('--donut', action='store_true',
+                    help='If set only the donut plots will be created ')
+
 parser.add_argument('-d', '--daa', type=str,
                     help='Path to the folder containing the .daa files of interest')
+
+parser.add_argument('-o', '--output', type=str,
+                    help='Path to output folder')
 
 
 args = parser.parse_args()
@@ -40,8 +46,11 @@ args = parser.parse_args()
 threshold = args.threshold
 mapping_file = ""
 mapping_file_path = args.daa
-count_folder_path = "Output/"
+count_folder_path = ""
 count_file_name = ""
+
+out_path = args.output
+
 
 phyla = []
 phyla_combined = []
@@ -49,6 +58,10 @@ values = []
 pos_count = 0
 pos = []
 data_bars = []
+phyla_pairwise = []
+data_pairwise = []
+temp = []
+temp2 = []
 
 # Create commands.txt with the proper commands for the right file
 
@@ -59,18 +72,17 @@ for file in glob.glob(mapping_file_path + "*.daa"):
     print("Current mapping file: " + mapping_file_name)
 
     with open("Output/" + mapping_file_name + '_commands.txt', 'w') as the_file:
-        print(the_file)
         count_file_name = str(mapping_file_name) + "_taxon_to_percent.txt"
         count_file_absolute_path = count_folder_path + count_file_name
         the_file.write("open viewer=Taxonomy;\n")
         the_file.write("open file='" +
-                       str(file) + ";\n")
+                       str(file) + "';\n")
 
         the_file.write("uncollapse nodes = all;\n")
 
         the_file.write("select rank=Order;\n")
         the_file.write("select nodes=subtree;\n")
-        the_file.write("export what=CSV format=taxonName_to_percent separator=tab counts=assigned file='" +
+        the_file.write("export what=CSV format=taxonName_to_percent separator=tab counts=assigned file='" + out_path +
                        str(count_file_absolute_path) + "';\n")
         the_file.write("quit;")
         the_file.close()
@@ -82,12 +94,12 @@ for file in glob.glob(mapping_file_path + "*.daa"):
             os.system(command)
         except OSError:
             print("Failed to start MEGAN. Please configure the correct path")
-    break
+
 # find all taxon_to_percent  .txt
 # files in the taxon_to_percent folder
 # and use data for plotting. For loop to iterate over all files
 
-for file in glob.glob(count_folder_path + "*taxon_*.txt"):
+for file in glob.glob("Output/" + "*taxon_*.txt"):
     phyla = []
     values = []
     phyla_with_percentage = []
@@ -132,7 +144,9 @@ for file in glob.glob(count_folder_path + "*taxon_*.txt"):
 
     phyla_with_percentage.append("Other " + "[" + str(values[-1]) + "%]")
     phyla.append("Other")
+
     phyla_combined += phyla
+
     data = values
     data_bars += values
     recipe = phyla_with_percentage
@@ -170,48 +184,80 @@ for file in glob.glob(count_folder_path + "*taxon_*.txt"):
     finally:
         pass
 
+    phyla_pairwise.append(phyla)
+    data_pairwise.append(values)
+
+for phylum_list in phyla_pairwise:
+    for phylum_list2 in phyla_pairwise:
+        # print(phylum_list)
+        # print(phylum_list2)
+        temp = []
+        if phylum_list == phylum_list2:
+            continue
+
+        temp.append(phylum_list)
+        temp.append(phylum_list2)
+        temp2.append(temp)
+
+print(temp2)
+phyla_pairwise = temp2
+
+temp2 = []
+for dat in data_pairwise:
+    for dat2 in data_pairwise:
+        temp = []
+        if dat == dat2:
+            continue
+        temp.append(dat)
+        temp.append(dat2)
+        temp2.append(temp)
+
+data_pairwise = temp2
+
+
+
+
 # start 2nd plot
 
-print("Creating grouped bar chart ...")
-bar_width = 0.005
-# plt.bar(pos, data, bar_width, color='blue', edgecolor='black')
-for dat in data_bars:
-    pos.append(pos_count)
-    pos_count += 0.0055
-data_int = [round(int(float(i))) for i in data_bars]
+if not args.donut:
+    print("Creating grouped bar chart ...")
+    bar_width = 0.005
+    # plt.bar(pos, data, bar_width, color='blue', edgecolor='black')
+    for dat in data_bars:
+        pos.append(pos_count)
+        pos_count += 0.0055
+    data_int = [round(int(float(i))) for i in data_bars]
 
-count = 0
+    count = 0
 
-prop_cycle = plt.rcParams['axes.prop_cycle']
-colors = prop_cycle.by_key()['color']
+    prop_cycle = plt.rcParams['axes.prop_cycle']
+    colors = prop_cycle.by_key()['color']
 
-for dat in data_bars:
-    bar = plt.bar(pos, height=data_int, width=bar_width, label=phyla_combined[count],color=colors)
-    count += 1
+    for dat in data_bars:
+        bar = plt.bar(pos, height=data_int, width=bar_width, label=phyla_combined[count], color=colors)
+        count += 1
 
-plt.xticks()
-plt.legend(bbox_to_anchor=(1.04, 1), loc="upper left")
-plt.margins(x=0.03)
-plt.xlim(0)
-plt.xlabel('Taxonomic Class', fontsize=12)
-plt.ylabel('Relative abundance in percent', fontsize=12)
-plt.title('Taxonomic analysis of the dataset ' + str(mapping_file), fontsize=12)
+    plt.xticks()
+    plt.legend(bbox_to_anchor=(1.04, 1), loc="upper left")
+    plt.margins(x=0.03)
+    plt.xlim(0)
+    plt.xlabel('Taxonomic Class', fontsize=12)
+    plt.ylabel('Relative abundance in percent', fontsize=12)
+    plt.title('Taxonomic analysis of the dataset ' + str(mapping_file), fontsize=12)
 
-plot_name = str(mapping_file)+"_grouped_barchart.pdf"
+    plot_name = str(mapping_file) + "_grouped_barchart.pdf"
 
-try:
-    plt.savefig(plot_name, bbox_inches="tight")
-    print("Saved plot as " + plot_name)
-    plt.close()
-    pass
-except Exception as e:
-    print("Could not create plot successfully.")
-    plt.close()
-else:
-    pass
-finally:
-    pass
+    try:
+        plt.savefig(plot_name, bbox_inches="tight")
+        print("Saved plot as " + plot_name)
+        plt.close()
+        pass
+    except Exception as e:
+        print("Could not create plot successfully.")
+        plt.close()
+    else:
+        pass
+    finally:
+        pass
 
-
-plt.show()
-
+    plt.show()
