@@ -62,7 +62,7 @@ count_folder_path = ""
 count_file_name = ""
 
 out_path = args.output
-
+daa_names_trimmed = []
 phyla = []
 phyla_combined = []
 values = []
@@ -88,7 +88,7 @@ daa_file_names = []
 
 
 for count, file in enumerate(glob.glob("Output/" + "*taxon_*.txt"), 1):
-    daa_file_names.append(count)
+    daa_file_names.append(file)
     phyla = []
     values = []
     phyla_with_percentage = []
@@ -151,9 +151,11 @@ def main():
     if args.extract:
         extract_taxon_to_percent()
     if args.donut:
-        create_donut_plots()
+        for count, lab in enumerate(labels_donut_plots):
+            name = create_donut_plots(data_donut_plots[count], lab, daa_file_names[count])
+            daa_names_trimmed.append(name)
     if args.bar:
-        create_grouped_barplot(data_bars)
+        create_grouped_barplot(data_bars, daa_names_trimmed)
 
 
 def extract_taxon_to_percent():
@@ -187,11 +189,17 @@ def extract_taxon_to_percent():
                 print("Failed to start MEGAN. Please configure the correct path")
 
 
-def create_donut_plots():
-    recipe = phyla_with_percentage
+def create_donut_plots(data_donuts, labels, name):
+    name = name.split('/')[1].split("_")[0] + name.split('/')[1].split("_")[1] + name.split('/')[1].split("_")[2] + \
+           name.split('/')[1].split("_")[3]
+
+    my_colors = [colors(n)[0] for n, _ in enumerate(labels, 1)]
+    color_dict = dict(zip(labels, my_colors))
+
+    recipe = labels
     fig, ax = plt.subplots(figsize=(16, 10), subplot_kw=dict(aspect="equal"))
-    print("Creating taxonomic plot for file " + file_ID)
-    wedges, texts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40)
+    print("Creating taxonomic plot for " + name)
+    wedges, texts = ax.pie(data_donuts, wedgeprops=dict(width=0.5), startangle=-40, colors=my_colors)
     #
     bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
     #
@@ -211,8 +219,8 @@ def create_donut_plots():
     # Title messses picture up. Use latex fig title instead
     # ax.set_title("Distribution of taxa on phylum level")
     try:
-        fig.savefig(count_folder_path + file_ID + ".pdf", bbox_inches='tight')
-        print("Plot successfully created for " + str(file_ID))
+        fig.savefig(name + "_taxon_donut" ".pdf", bbox_inches='tight')
+        print("Plot successfully created for " + name)
         plt.close()
         pass
     except Exception as e:
@@ -223,8 +231,10 @@ def create_donut_plots():
     finally:
         pass
 
+    return (name)
 
-def create_grouped_barplot(data):
+
+def create_grouped_barplot(data, daa_names):
     # sns.set_palette(sns.color_palette("hls", 20))
     pos_count = 3
     print("Creating grouped bar chart ...")
@@ -266,8 +276,7 @@ def create_grouped_barplot(data):
     # create legend
     plt.legend(by_label.values(), by_label.keys(), bbox_to_anchor=(1.04, 1), loc="upper left")
     # plt.legend(bbox_to_anchor=(1.04, 1), loc="upper left")
-    print(daa_file_names)
-    plt.xticks(xticks_pos, daa_file_names)
+    plt.xticks(xticks_pos, daa_names, rotation="vertical")
     plt.margins(x=0.03)
 
     plt.xlim(1)
