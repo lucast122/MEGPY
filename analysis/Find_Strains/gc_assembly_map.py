@@ -60,14 +60,18 @@ E_VALUE_THRESH = 0.04
 GC_OUTPUT = "gc_temp"
 
 parser = argparse.ArgumentParser(description='Parse command line arguments.')
-parser.add_argument('input', type=str,
+parser.add_argument('--input', type=str,
                     help='Input file for the gene centric assembly (.daa file)')
-parser.add_argument('id', type=str,
+parser.add_argument('--ids', type=str,
                     help='EC accession number of the desired SEED attribute for which the gc-assembly should be created')
 args = parser.parse_args()
 
+ids = args.ids.split(",")
+
+
 MAPPING_FILE_PATH = args.input
 MAPPING_FILE_NAME = ntpath.basename(MAPPING_FILE_PATH)[:-5]
+
 
 """
 Performs Gene Centric assembly for a specific SEED ID on a given .daa file
@@ -77,6 +81,7 @@ Returns name of the output file
 
 
 def gc_assembly(input_file: str, output_file: str, seed_id: str):
+
     command = "/Applications/MEGAN_/tools/gc-assembler --input " + input_file + \
               " -o " + output_file + \
               " -fun SEED -id " + seed_id
@@ -90,12 +95,18 @@ Runs NCBI BLAST for the output of gc-assembly vs NR database
 
 
 def blast(input, max_time):
+    try:
+        os.mkdir(MAPPING_FILE_NAME)
+    except OSError:
+        print("Directory %s already exists" % MAPPING_FILE_NAME)
+    else:
+        print("Successfully created the directory %s " % MAPPING_FILE_NAME)
     strains = []
     BLAST_OUTPUT_NAME = input[:-6] + str(MAPPING_FILE_NAME) + "_blast_results"
     count = 0
     print("RUNNING BLAST WITH INPUT: " + str(input))
     try:
-        os.remove(BLAST_OUTPUT_NAME)
+        os.remove(MAPPING_FILE_NAME + "/" + BLAST_OUTPUT_NAME)
         print("Blast results already exist for file " + input + " deleting results before computing new.")
     except FileNotFoundError:
         print("No previous results found")
@@ -117,7 +128,7 @@ def blast(input, max_time):
         try:
             result_handle = Bio.Blast.NCBIWWW.qblast("blastx", "nr", record.seq, megablast=True)
 
-            with open("blast_output_" + MAPPING_FILE_NAME + args.id + ".xml", "w") as out_handle:
+            with open(MAPPING_FILE_NAME + "/blast_output_" + MAPPING_FILE_NAME + id + ".xml", "w") as out_handle:
                 out_handle.write(result_handle.read())
 
             result_handle.close()
@@ -130,7 +141,7 @@ def blast(input, max_time):
             signal.alarm(0)
 
         # Now write the BLAST output to a file and create another file with a list of strains
-        handle = open("blast_output_" + MAPPING_FILE_NAME + args.id + ".xml", "r")
+        handle = open(MAPPING_FILE_NAME + "/blast_output_" + MAPPING_FILE_NAME + id + ".xml", "r")
         blast_record = NCBIXML.read(handle)
         with open(BLAST_OUTPUT_NAME, "a") as writer:
             for alignment in blast_record.alignments:
@@ -150,26 +161,30 @@ def blast(input, max_time):
 
 
 # Run the gene centric assembly using the command line parameters
-gc_assembly_file_name = GC_OUTPUT + "_ID_" + args.id + ".fasta"
-# gc_assembly(args.input, gc_assembly_file_name, args.id)
+
+
+for id in ids:
+    gc_assembly_file_name = GC_OUTPUT + "_ID_" + id + "_REF_" + MAPPING_FILE_NAME + ".fasta"
+    gc_assembly(args.input, gc_assembly_file_name, id)
+    strains = blast(gc_assembly_file_name, 300)
+    strains = list(dict.fromkeys(strains))
+    # Now write all unique strains associated with wanted MEGAN ID to a file
+    STRAINS_FILE_NAME = "strains_" + str(MAPPING_FILE_NAME) + id
+
+    # delete duplicate strains
+    strains = list(dict.fromkeys(strains))
+    # write strains to file
+    with open(MAPPING_FILE_NAME + "/" + STRAINS_FILE_NAME, "w") as f:
+        for strain in strains:
+            f.writelines(strain)
+            f.write("\n")
+
+    # create summary file to informs about present strains as well as strains associated with reverse-beta-oxidation
 
 # Run blast with the gc assembly output vs nr
-print(gc_assembly_file_name)
-strains = blast(gc_assembly_file_name, 300)
-strains = list(dict.fromkeys(strains))
 
-# Now write all unique strains associated with wanted MEGAN ID to a file
-STRAINS_FILE_NAME = "strains_" + str(MAPPING_FILE_NAME) + args.id
 
-# delete duplicate strains
-strains = list(dict.fromkeys(strains))
-#write strains to file
-with open(STRAINS_FILE_NAME, "w") as f:
-    for strain in strains:
-        f.writelines(strain)
-        f.write("\n")
 
-# create summary file to informs about present strains as well as strains associated with reverse-beta-oxidation
 
 
 # blast("reads-Acyl-CoA_dehydrogenase__short-chain_specific__EC_1.3.99.2.fasta")
