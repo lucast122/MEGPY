@@ -143,6 +143,8 @@ for count, file in enumerate(glob.glob("Output/" + "*taxon_*.txt"), 1):
     data_donut_plots.append(data)
     labels_donut_plots.append(phyla_with_percentage)
 
+daa_file_names.sort()
+
 
 # call important methods
 
@@ -151,8 +153,8 @@ def main():
     if args.extract:
         extract_taxon_to_percent()
     if args.donut:
-        for count, lab in enumerate(labels_donut_plots):
-            name = create_donut_plots(data_donut_plots[count], lab, daa_file_names[count])
+        for cou, lab in enumerate(labels_donut_plots):
+            name = create_donut_plots(data_donut_plots[cou], lab, daa_file_names[cou])
             daa_names_trimmed.append(name)
     if args.bar:
         create_grouped_barplot(data_bars, daa_names_trimmed)
@@ -182,7 +184,7 @@ def extract_taxon_to_percent():
 
             command = MEGAN_COMMAND + \
                       "Output/" + str(mapping_file_name) + "_commands.txt"
-        if not args.plot:
+        if args.extract:
             try:
                 os.system(command)
             except OSError:
