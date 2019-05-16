@@ -20,3 +20,10 @@ gc_assembly_map.py
 ```
 
 takes a .daa file as input as well as a SEED ID and computes a list with organisms in the .daa file that have the gene described by the ID. It uses gene centric assembly included with MEGAN as well as NCBI online Blast
+
+
+```
+extract_strain_table.py
+```
+
+Takes BLAST results from gc_assembly_map and processes them. The output is a table with all enzymes that were targeted by the gc-assembly and the bacterial strains they are associated with in the .daa file
