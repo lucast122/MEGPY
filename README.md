@@ -1,10 +1,10 @@
-# METAMAP - METAgenome analysis with Megan and Python
+# METAMAP - Metagenome analysis with Megan and Python
 
 [![Build Status](https://travis-ci.com/lucass122/METAMAP.svg?branch=master)](https://travis-ci.com/lucass122/METAMAP)
 
 Collection of scripts for metagenomic downstream analysis of bioreactor data using the tool MEGAN and the programming language Python.
 
-# Taxonomic anaylsis
+# Taxonomic analysis
 
 ```
 taxonomy_plots.py
