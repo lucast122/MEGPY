@@ -17,9 +17,9 @@
 
 import argparse
 import glob
-import ntpath
 import os
 import random
+import traceback
 from collections import OrderedDict
 
 import matplotlib.pyplot as plt
@@ -87,7 +87,7 @@ daa_file_names = []
 # and use data for plotting. For loop to iterate over all files
 
 
-for count, file in enumerate(glob.glob("Output/" + "*taxon_*.txt"), 1):
+for count, file in enumerate(glob.glob("Output/" + "*97percent*.txt"), 1):
     daa_file_names.append(file)
     phyla = []
     values = []
@@ -150,19 +150,31 @@ daa_file_names.sort()
 
 
 def main():
+
     if args.extract:
         extract_taxon_to_percent()
     if args.donut:
+        donut_colors = [colors(n)[0] for n, _ in enumerate(labels_donut_plots, 1)]
+        print(labels_donut_plots)
+        print(donut_colors)
+        donut_color_dict = {}
+        for label in labels_donut_plots:
+            for l in label:
+                print(l.split()[0])
+                donut_color_dict[l.split()[0]] = colors(1)
+        print(donut_color_dict)
         for cou, lab in enumerate(labels_donut_plots):
-            name = create_donut_plots(data_donut_plots[cou], lab, daa_file_names[cou])
+            name = create_donut_plots(data_donut_plots[cou], lab, daa_file_names[cou], donut_color_dict)
             daa_names_trimmed.append(name)
+
     if args.bar:
         create_grouped_barplot(data_bars, daa_names_trimmed)
 
 
 def extract_taxon_to_percent():
     for file in glob.glob(mapping_file_path + "*.daa"):
-        mapping_file_name = ntpath.basename(file)
+        # mapping_file_name = ntpath.basename(file)
+        mapping_file_name = "/Volumes/Elements/Uni/Data_Master_Thesis/Mapping/JW101_L001_R0_001.daa"
         print("Current mapping file: " + mapping_file_name)
 
         with open("Output/" + mapping_file_name + '_commands.txt', 'w') as the_file:
@@ -191,17 +203,20 @@ def extract_taxon_to_percent():
                 print("Failed to start MEGAN. Please configure the correct path")
 
 
-def create_donut_plots(data_donuts, labels, name):
+def create_donut_plots(data_donuts, labels, name, color_dict):
     name = name.split('/')[1].split("_")[0] + name.split('/')[1].split("_")[1] + name.split('/')[1].split("_")[2] + \
            name.split('/')[1].split("_")[3]
-
-    my_colors = [colors(n)[0] for n, _ in enumerate(labels, 1)]
-    color_dict = dict(zip(labels, my_colors))
 
     recipe = labels
     fig, ax = plt.subplots(figsize=(16, 10), subplot_kw=dict(aspect="equal"))
     print("Creating taxonomic plot for " + name)
-    wedges, texts = ax.pie(data_donuts, wedgeprops=dict(width=0.5), startangle=-40, colors=my_colors)
+    wedges, texts = ax.pie(data_donuts, wedgeprops=dict(width=0.5), startangle=-40)
+    for idx, wedge in enumerate(wedges):
+
+        wedge._facecolor = color_dict[recipe[idx].split()[0]][0]
+        if len(wedge._facecolor) != 4:
+            wedge._facecolor = wedge._facecolor + (1,)
+
     #
     bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
     #
@@ -215,7 +230,7 @@ def create_donut_plots(data_donuts, labels, name):
         horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
         connectionstyle = "angle,angleA=0,angleB={}".format(ang)
         kw["arrowprops"].update({"connectionstyle": connectionstyle})
-        ax.annotate(recipe[i], xy=(x, y), xytext=(1.35 * np.sign(x), 1.4 * y),
+        ax.annotate(recipe[i], xy=(x, y), xytext=(1.3 * np.sign(x), 1.2 * y),
                     horizontalalignment=horizontalalignment, **kw)
 
     # Title messses picture up. Use latex fig title instead
@@ -226,6 +241,7 @@ def create_donut_plots(data_donuts, labels, name):
         plt.close()
         pass
     except Exception as e:
+        print(traceback.print_exc())
         print("Could not create plot successfully.")
         plt.close()
     else:

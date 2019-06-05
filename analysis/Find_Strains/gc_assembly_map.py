@@ -84,7 +84,7 @@ def gc_assembly(input_file: str, output_file: str, seed_id: str):
 
     command = "/Applications/MEGAN_/tools/gc-assembler --input " + input_file + \
               " -o " + output_file + \
-              " -fun SEED -id " + seed_id
+              " -fun SEED -id " + seed_id + " -mic 60"
     os.system(command)
     print(command)
 

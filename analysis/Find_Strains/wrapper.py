@@ -17,8 +17,7 @@
 
 import os
 
-PATHS = ["/Volumes/Elements/Uni/Data_Master_Thesis/Mapping/JW104_TCCTGAGCGTAAGGAG_L001_R1_001_trimmed..daa",
-         "/Volumes/Elements/Uni/Data_Master_Thesis/Mapping/JW103_AGGCAGAAGTAAGGAG_L008_R1_001_trimmed..daa"]
+PATHS = ["/Volumes/Timo_HDD/JW101_TAAGGCGAGTAAGGAG_L008_R1_001_trimmed..daa"]
 		
 
          
