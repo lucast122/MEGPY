@@ -17,6 +17,7 @@
 
 import argparse
 import glob
+import ntpath
 import os
 import random
 import traceback
@@ -30,8 +31,9 @@ parser.add_argument('-t', '--threshold', type=float,
                     help='Float value for plotting cutoff. Only classes with higher '
                          'percentage than this value are shown')
 
-parser.add_argument('-e', '--extract', action='store_true',
+parser.add_argument('-e', '--extract', type=str,
                     help='Provide this parameter to extract the taxon_to_percent data from the provided .daa files using MEGAN'
+                         ' value is the rank you want to plot later (e.g. species, order or both to do both)'
                          'for this to work MEGAN ultimate has to be installed and ')
 
 parser.add_argument('--donut', action='store_true',
@@ -60,7 +62,7 @@ mapping_file = ""
 mapping_file_path = args.daa
 count_folder_path = ""
 count_file_name = ""
-
+rank = args.extract
 out_path = args.output
 daa_names_trimmed = []
 phyla = []
@@ -87,7 +89,7 @@ daa_file_names = []
 # and use data for plotting. For loop to iterate over all files
 
 
-for count, file in enumerate(glob.glob("Output/" + "*97percent*.txt"), 1):
+for count, file in enumerate(glob.glob("Output/" + "*" + rank + "*" + "*percent*.txt"), 1):
     daa_file_names.append(file)
     phyla = []
     values = []
@@ -150,9 +152,20 @@ daa_file_names.sort()
 
 
 def main():
+    # chose rank to use for plotting donut plots
+    rank = args.extract
+    if args.extract == 'species':
+        extract_taxonomy_data("species")
+    elif args.extract == 'order':
+        extract_taxonomy_data("order")
+    elif args.extract == 'both':
+        extract_taxonomy_data("species")
+        extract_taxonomy_data("order")
+    # default rank is species if nothing is provided
+    elif not args.extract:
+        rank = "species"
 
-    if args.extract:
-        extract_taxon_to_percent()
+
     if args.donut:
         donut_colors = [colors(n)[0] for n, _ in enumerate(labels_donut_plots, 1)]
         print(labels_donut_plots)
@@ -162,31 +175,37 @@ def main():
             for l in label:
                 print(l.split()[0])
                 donut_color_dict[l.split()[0]] = colors(1)
+                donut_color_dict[l.split()[0]] = colors(1)
         print(donut_color_dict)
         for cou, lab in enumerate(labels_donut_plots):
-            name = create_donut_plots(data_donut_plots[cou], lab, daa_file_names[cou], donut_color_dict)
+            name = create_donut_plots(data_donut_plots[cou], lab, daa_file_names[cou], donut_color_dict, rank)
             daa_names_trimmed.append(name)
 
     if args.bar:
-        create_grouped_barplot(data_bars, daa_names_trimmed)
+        create_grouped_barplot(data_bars, daa_names_trimmed, rank)
 
 
-def extract_taxon_to_percent():
+# Uses MEGAN to open a mapping file (.daa file) and extract the taxonomy data
+# @param rank: str with the rank to be used for extracting
+def extract_taxonomy_data(rank):
     for file in glob.glob(mapping_file_path + "*.daa"):
-        # mapping_file_name = ntpath.basename(file)
-        mapping_file_name = "/Volumes/Elements/Uni/Data_Master_Thesis/Mapping/JW101_L001_R0_001.daa"
+        mapping_file_name = ntpath.basename(file)
+        #mapping_file_name = "/Volumes/Timo_HDD/JW106_TAGGCATGGTAAGGAG_L001_R1_001_trimmed..daa"
         print("Current mapping file: " + mapping_file_name)
-
-        with open("Output/" + mapping_file_name + '_commands.txt', 'w') as the_file:
-            count_file_name = str(mapping_file_name) + "_taxon_to_percent.txt"
+        command_file_path = "Output/" + mapping_file_name + '_' + rank + '_commands.txt'
+        # create command file with MEGAN commands used for extracting data
+        with open(command_file_path, 'w') as the_file:
+            count_file_name = str(mapping_file_name) + "_" + rank + "_taxon_to_percent.txt"
             count_file_absolute_path = count_folder_path + count_file_name
             the_file.write("open viewer=Taxonomy;\n")
             the_file.write("open file='" +
                            str(file) + "';\n")
 
             the_file.write("uncollapse nodes = all;\n")
-
-            the_file.write("select rank=Order;\n")
+            if rank == "order":
+                the_file.write("select rank=Order;\n")
+            elif rank == "species":
+                the_file.write("select rank=Species;\n")
             the_file.write("select nodes=subtree;\n")
             the_file.write(
                 "export what=CSV format=taxonName_to_percent separator=tab counts=assigned file='" + out_path +
@@ -194,8 +213,7 @@ def extract_taxon_to_percent():
             the_file.write("quit;")
             the_file.close()
 
-            command = MEGAN_COMMAND + \
-                      "Output/" + str(mapping_file_name) + "_commands.txt"
+            command = MEGAN_COMMAND + command_file_path
         if args.extract:
             try:
                 os.system(command)
@@ -203,7 +221,7 @@ def extract_taxon_to_percent():
                 print("Failed to start MEGAN. Please configure the correct path")
 
 
-def create_donut_plots(data_donuts, labels, name, color_dict):
+def create_donut_plots(data_donuts, labels, name, color_dict, rank):
     name = name.split('/')[1].split("_")[0] + name.split('/')[1].split("_")[1] + name.split('/')[1].split("_")[2] + \
            name.split('/')[1].split("_")[3]
 
@@ -236,8 +254,8 @@ def create_donut_plots(data_donuts, labels, name, color_dict):
     # Title messses picture up. Use latex fig title instead
     # ax.set_title("Distribution of taxa on phylum level")
     try:
-        fig.savefig(name + "_taxon_donut" ".pdf", bbox_inches='tight')
-        print("Plot successfully created for " + name)
+        fig.savefig(name + "_taxon_donut_" + rank + ".pdf", bbox_inches='tight')
+        print("Plot successfully created for " + name + "Rank: " + rank)
         plt.close()
         pass
     except Exception as e:
@@ -252,7 +270,7 @@ def create_donut_plots(data_donuts, labels, name, color_dict):
     return (name)
 
 
-def create_grouped_barplot(data, daa_names):
+def create_grouped_barplot(data, daa_names, rank):
     # sns.set_palette(sns.color_palette("hls", 20))
     pos_count = 3
     print("Creating grouped bar chart ...")
@@ -302,7 +320,7 @@ def create_grouped_barplot(data, daa_names):
     plt.ylabel('Relative abundance in percent', fontsize=12)
     plt.title('Taxonomic analysis of the dataset ' + str(mapping_file), fontsize=12)
 
-    plot_name = "grouped_barchart.pdf"
+    plot_name = "grouped_barchart_" + rank + ".pdf"
     # plt.show()
     print("Saving plot ...")
     plt.savefig(plot_name, bbox_inches="tight")
