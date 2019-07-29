@@ -89,7 +89,7 @@ daa_file_names = []
 # and use data for plotting. For loop to iterate over all files
 
 
-for count, file in enumerate(glob.glob("Output/" + "*" + rank + "*" + "*percent*.txt"), 1):
+for count, file in enumerate(glob.glob("Output/" + "*" + rank + "*" + "*percent.txt"), 1):
     daa_file_names.append(file)
     phyla = []
     values = []
@@ -154,17 +154,17 @@ daa_file_names.sort()
 def main():
     # chose rank to use for plotting donut plots
     rank = args.extract
-    if args.extract == 'species':
-        extract_taxonomy_data("species")
-    elif args.extract == 'order':
-        extract_taxonomy_data("order")
-    elif args.extract == 'both':
-        extract_taxonomy_data("species")
-        extract_taxonomy_data("order")
+    # if args.extract == 'species':
+    # extract_taxonomy_data("species")
+    # elif args.extract == 'order':
+    # extract_taxonomy_data("order")
+    # elif args.extract == 'both':
+    # extract_taxonomy_data("species")
+    # extract_taxonomy_data("order")
     # default rank is species if nothing is provided
-    elif not args.extract:
-        rank = "species"
-
+    # elif not args.extract:
+    #     rank = "species"
+    rank = "species"
 
     if args.donut:
         donut_colors = [colors(n)[0] for n, _ in enumerate(labels_donut_plots, 1)]
@@ -198,15 +198,15 @@ def extract_taxonomy_data(rank):
             count_file_name = str(mapping_file_name) + "_" + rank + "_taxon_to_percent.txt"
             count_file_absolute_path = count_folder_path + count_file_name
             the_file.write("open viewer=Taxonomy;\n")
-            the_file.write("open file='" +
-                           str(file) + "';\n")
-
+            the_file.write("open file='" + str(file) + "';\n")
             the_file.write("uncollapse nodes = all;\n")
             if rank == "order":
+                the_file.write("collapse rank = 'Order';\n")
                 the_file.write("select rank=Order;\n")
             elif rank == "species":
+                the_file.write("collapse rank = 'Species';\n")
                 the_file.write("select rank=Species;\n")
-            the_file.write("select nodes=subtree;\n")
+
             the_file.write(
                 "export what=CSV format=taxonName_to_percent separator=tab counts=assigned file='" + out_path +
                 str(count_file_absolute_path) + "';\n")

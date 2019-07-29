@@ -162,7 +162,7 @@ def blast(input, max_time):
 
 for id in ids:
     gc_assembly_file_name = GC_OUTPUT + "_ID_" + id + "_REF_" + MAPPING_FILE_NAME + ".fasta"
-    gc_assembly(args.input, gc_assembly_file_name, id)
+    # gc_assembly(args.input, gc_assembly_file_name, id)
     strains = blast(gc_assembly_file_name, 300)
     strains = list(dict.fromkeys(strains))
     # Now write all unique strains associated with wanted MEGAN ID to a file

@@ -48,7 +48,7 @@ def change_min_identity():
                            str(file) + "';\n")
 
             the_file.write("recompute minSupportPercent = 0.01 minSupport = 1 minScore = 50.0 maxExpected = 0.01"
-                           " minPercentIdentity = 97.0 topPercent = 10.0 lcaAlgorithm = naive"
+                           " minPercentIdentity = 80.0 topPercent = 10.0 lcaAlgorithm = naive"
                            " lcaCoveragePercent = 100.0 minPercentReadToCover = 0.0"
                            " minPercentReferenceToCover = 0.0 minComplexity = 0.0 longReads = false"
                            " pairedReads = false useIdentityFilter = false readAssignmentMode"
