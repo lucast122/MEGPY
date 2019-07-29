@@ -8,9 +8,11 @@ Collection of scripts for metagenomic downstream analysis of bioreactor data usi
 
 NOTE: REQUIREMENTS NOT ADDED YET PLEASE DOWNLOAD SCRIPTS MANUALLY FOR NOW TO USE THEM - WILL UPDATE THIS ONCE PROJECT IS FINISHED
 
+```
 1. Clone this repository
 2. Navigate to repository
 3. pip install .
+```
 
 # Taxonomic analysis
 
