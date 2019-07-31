@@ -1,4 +1,4 @@
-# METAMAP - Metagenome analysis with Megan and Python
+# mpgy - Python + MEGAN based Metagenomics downstream analysis 
 
 [![Build Status](https://travis-ci.com/lucass122/METAMAP.svg?branch=master)](https://travis-ci.com/lucass122/METAMAP)
 
