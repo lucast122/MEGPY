@@ -1,4 +1,4 @@
-# MGPY - Python + MEGAN based Metagenomics downstream analysis 
+# MEGPY - Combining MEGAN and PYthon for metagenomic analysis 
 
 [![Build Status](https://travis-ci.com/lucass122/METAMAP.svg?branch=master)](https://travis-ci.com/lucass122/METAMAP)
 
