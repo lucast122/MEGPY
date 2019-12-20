@@ -1,0 +1,2 @@
+open file=/Users/timolucas/work/for_jeon/data/assembly_ncbi.daa;
+select nodes=all;
