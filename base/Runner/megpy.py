@@ -48,7 +48,7 @@ class Commander:
 
 
 test_commander = Commander()
-test_commander.open_file('/Users/timolucas/work/for_jeon/data/assembly_ncbi.daa')
+test_commander.open_file('/path_to_daa/test.daa')
 test_commander.select_nodes('all')
 test_runner = Runner("/Applications/MEGAN/MEGAN.app/Contents/MacOS/JavaApplicationStub -g -E < commands.txt", test_commander)
 Runner.run(test_runner)
